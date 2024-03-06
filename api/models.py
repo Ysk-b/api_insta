@@ -1,5 +1,10 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.conf import settings
+
+def upload_avatar_path(instance, filename):
+    ext = filename.split('.')[-1]
+    return '/'.join(['avatars', str(instance.userProfile.id) + str(instance.nickName) + str('.') + str(ext)])
 
 class UserManager(BaseUserManager):
     # 通常のユーザーを作成するメソッド
@@ -44,3 +49,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     # ユーザーオブジェクトを文字列で表現した際の挙動を定義
     def __str__(self):
         return self.email
+
+class Profile(models.Model):
+    nickName = models.CharField(max_length=20)
+    userProfile = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name='userProfile', on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    img = models.ImageField(upload_to=upload_avatar_path, blank=True, null=True)
+
+    def __str__(self):
+        return self.nickName

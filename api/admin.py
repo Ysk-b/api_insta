@@ -1,14 +1,14 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from . import models
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-# 今回カスタムでユーザーモデルを作成したため、adminページでの表示をカスタマイズ
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
     list_display = ['email']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal Info'), {'fields': ()}),
+        (_('Personal Info'), {'fields': ()}),  # _をgettext_lazyとして使用
         (
             _('Permissions'),
             {'fields': ('is_active', 'is_staff', 'is_superuser')}

@@ -18,12 +18,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(userProfile=self.request.user)  # リクエストユーザーをプロフィールのユーザーとして保存
 
-# 自分のプロフィールをリスト表示するためのビュー
+# 自分のプロフィールをリスト表示
 class MyProfileListView(generics.ListAPIView):
     queryset = Profile.objects.all()  # 使用するクエリセットを指定
     serializer_class = serializers.ProfileSerializer  # 使用するシリアライザーを指定
 
-    # クエリセットをフィルタリングするメソッド
+    # クエリセットをフィルタリング
     def get_queryset(self):
         return self.queryset.filter(userProfile=self.request.user)  # リクエストユーザーのプロフィールのみを返す
 
